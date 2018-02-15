@@ -10,7 +10,7 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use PiggyCustomEnchants\CustomEnchants\CustomEnchants;
 
-class Kit{
+class Gkit{
 
     private $gkit;
     private $data;
@@ -153,7 +153,7 @@ class Kit{
         }
     }
     private function testPermission(Player $player) : bool{
-        return $this->gkit->permManager ? $player->hasPermission("advancedkits." . strtolower($this->name)) : (
+        return $this->gkit->permManager ? $player->hasPermission("gkits." . strtolower($this->name)) : (
             (isset($this->data["users"]) ? in_array(strtolower($player->getName()), $this->data["users"]) : true)
             and
             (isset($this->data["worlds"]) ? in_array(strtolower($player->getLevel()->getName()), $this->data["worlds"]) : true)
