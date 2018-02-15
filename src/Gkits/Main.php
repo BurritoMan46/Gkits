@@ -15,10 +15,10 @@ use PiggyCustomEnchants;
 
 class Main extends PluginBase{
 
+    /**@var gkit[] */
+    public $gkits = [];
     /**@var kit[] */
-    public $kits = [];
-    /**@var kit[] */
-    public $hasKit = [];
+    public $hasGkit = [];
     /**@var EconomyManager */
     public $economy;
     public $permManager = false;
@@ -45,8 +45,8 @@ class Main extends PluginBase{
         }
     }
     public function onDisable(){
-        foreach($this->kits as $kit){
-            $kit->save();
+        foreach($this->gkits as $gkit){
+            $gkit->save();
         }
     }
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
@@ -60,53 +60,53 @@ class Main extends PluginBase{
                     $sender->sendMessage($this->langManager->getTranslation("av-gkits", implode(", ", array_keys($this->kits))));
                     return true;
                 }
-                $kit = $this->getKit($args[0]);
-                if($kit === null){
+                $gkit = $this->getKit($args[0]);
+                if($gkit === null){
                     $sender->sendMessage($this->langManager->getTranslation("no-gkit", $args[0]));
                     return true;
                 }
-                $kit->handleRequest($sender);
+                $gkit->handleRequest($sender);
                 return true;
                 break;
             case "gkreload":
-                foreach($this->kits as $kit){
-                    $kit->save();
+                foreach($this->kits as $gkit){
+                    $gkit->save();
                 }
-                $this->kits = [];
-                $this->loadKits();
+                $this->gkits = [];
+                $this->loadGkits();
                 $sender->sendMessage($this->langManager->getTranslation("reload"));
                 return true;
                 break;
         }
         return true;
     }
-    private function loadKits(){
+    private function loadGkits(){
         $this->saveResource("gkits.yml");
-        $kitsData = yaml_parse_file($this->getDataFolder() . "gkits.yml");
+        $gkitsData = yaml_parse_file($this->getDataFolder() . "gkits.yml");
         $this->fixConfig($kitsData);
-        foreach($kitsData as $kitName => $kitData){
-            $this->kits[$kitName] = new Kit($this, $kitData, $kitName);
+        foreach($gkitsData as $gkitName => $gkitData){
+            $this->gkits[$gkitName] = new Kit($this, $gkitData, $gkitName);
         }
     }
     private function fixConfig(&$config){
-        foreach($config as $name => $kit){
-            if(isset($kit["users"])){
-                $users = array_map("strtolower", $kit["users"]);
+        foreach($config as $name => $gkit){
+            if(isset($gkit["users"])){
+                $users = array_map("strtolower", $gkit["users"]);
                 $config[$name]["users"] = $users;
             }
-            if(isset($kit["worlds"])){
-                $worlds = array_map("strtolower", $kit["worlds"]);
+            if(isset($gkit["worlds"])){
+                $worlds = array_map("strtolower", $gkit["worlds"]);
                 $config[$name]["worlds"] = $worlds;
             }
         }
     }
     /**
-     * @param string $kit
-     * @return Kit|null
+     * @param string $gkit
+     * @return Gkit|null
      */
-    public function getKit(string $kit){
-        /**@var Kit[] $lowerKeys */
-        $lowerKeys = array_change_key_case($this->kits, CASE_LOWER);
+    public function getGkit(string $gkit){
+        /**@var Gkit[] $lowerKeys */
+        $lowerKeys = array_change_key_case($this->gkits, CASE_LOWER);
         if(isset($lowerKeys[strtolower($kit)])){
             return $lowerKeys[strtolower($kit)];
         }
@@ -114,11 +114,11 @@ class Main extends PluginBase{
     }
     /**
      * @param      $player
-     * @param bool $object whether to return the gkit object or the kit name
-     * @return kit|null
+     * @param bool $object whether to return the gkit object or the gkit name
+     * @return gkit|null
      */
     public function getPlayerKit($player, $object = false){
         if($player instanceof Player) $player = $player->getName();
-        return isset($this->hasKit[strtolower($player)]) ? ($object ? $this->hasKit[strtolower($player)] : $this->hasKit[strtolower($player)]->getName()) : null;
+        return isset($this->hasGkit[strtolower($player)]) ? ($object ? $this->hasGkit[strtolower($player)] : $this->hasGkit[strtolower($player)]->getName()) : null;
     }
 }
