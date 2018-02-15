@@ -26,15 +26,15 @@ class EventListener implements Listener{
             $tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
             if($tile instanceof Sign){
                 $text = $tile->getText();
-                if(strtolower(TextFormat::clean($text[0])) === strtolower($this->ak->getConfig()->get("sign-text"))){
+                if(strtolower(TextFormat::clean($text[0])) === strtolower($this->gkit->getConfig()->get("sign-text"))){
                     $event->setCancelled();
                     if(empty($text[1])){
-                        $event->getPlayer()->sendMessage($this->ak->langManager->getTranslation("no-sign-on-kit"));
+                        $event->getPlayer()->sendMessage($this->gkit->langManager->getTranslation("no-sign-on-gkit"));
                         return;
                     }
-                    $kit = $this->ak->getKit($text[1]);
+                    $kit = $this->gkit->getKit($text[1]);
                     if($kit === null){
-                        $event->getPlayer()->sendMessage($this->ak->langManager->getTranslation("no-kit", $text[1]));
+                        $event->getPlayer()->sendMessage($this->gkit->langManager->getTranslation("no-gkit", $text[1]));
                         return;
                     }
                     $kit->handleRequest($event->getPlayer());
@@ -44,8 +44,8 @@ class EventListener implements Listener{
     }
     
     public function onSignChange(SignChangeEvent $event){
-        if(strtolower(TextFormat::clean($event->getLine(0))) === strtolower($this->ak->getConfig()->get("sign-text")) and !$event->getPlayer()->hasPermission("advancedkits.admin")){
-            $event->getPlayer()->sendMessage($this->ak->langManager->getTranslation("no-perm-sign"));
+        if(strtolower(TextFormat::clean($event->getLine(0))) === strtolower($this->gkit->getConfig()->get("sign-text")) and !$event->getPlayer()->hasPermission("gkits.admin")){
+            $event->getPlayer()->sendMessage($this->gkit->langManager->getTranslation("no-perm-sign"));
             $event->setCancelled();
         }
     }
