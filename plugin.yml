@@ -5,3 +5,20 @@ api: [3.0.0-ALPHA10, 3.0.0-ALPHA11]
 author: MangoTheDev
 softdepend: ["PiggyCustomEnchants"]
 description: Add Gkits to your server
+commands:
+ gkit:
+  description: Get a gkit!
+  usage: "/gkit <kitName>"
+  aliases: [gk, gkt]
+  permission: gkits.command
+ gkreload:
+  descrpition: Reload Gkits settings
+  usage: "/gkreload"
+  permission: gkits.admin
+permissions:
+ gkits.command:
+  description: "Allows the user to run /gkit command"
+  default: true
+ gkits.admin:
+  description: "Allows to manage admin features"
+  default: op
